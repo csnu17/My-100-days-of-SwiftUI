@@ -41,6 +41,25 @@ struct GridStack<Content: View>: View {
     }
 }
 
+struct TitleView: ViewModifier {
+    let text: String
+    
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+                .frame(width: 400.0, height: 400.0)
+            Text(text)
+                .foregroundColor(Color.blue)
+        }
+    }
+}
+
+extension View {
+    func makeTitleView(with text: String) -> some View {
+        self.modifier(TitleView(text: text))
+    }
+}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
