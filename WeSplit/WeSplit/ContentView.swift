@@ -11,7 +11,7 @@ import SwiftUI
 struct ContentView: View {
     
     @State private var checkAmount = ""
-    @State private var numberOfPeople = 2
+    @State private var numberOfPeople = 4
     @State private var tipPercentage = 2
     
     private let tipPercentages = [10, 15, 20, 25, 0]
@@ -25,7 +25,7 @@ struct ContentView: View {
     }
     
     private var totalPerPerson: Double {
-        let peopleCount = Double(numberOfPeople + 2)
+        let peopleCount = Double(numberOfPeople)
         let amountPerson = total / peopleCount
         return amountPerson
     }
@@ -38,7 +38,7 @@ struct ContentView: View {
                         .keyboardType(.decimalPad)
                     
                     Picker("Number of People", selection: $numberOfPeople) {
-                        ForEach(2 ..< 100) {
+                        ForEach(2 ..< 100, id: \.self) {
                             Text("\($0) people")
                         }
                     }
