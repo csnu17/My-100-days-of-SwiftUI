@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var alertTitle = ""
     @State private var alertMessage = ""
     @State private var showAlert = false
+    @State private var score = 0
     
     var body: some View {
         NavigationView {
@@ -28,12 +29,17 @@ struct ContentView: View {
                     Image(systemName: "\($0.count).circle")
                     Text($0)
                 }
+                
+                Text("Score: \(score)")
             }
             .navigationBarTitle(rootWord)
             .onAppear(perform: startGame)
             .alert(isPresented: $showAlert) {
                 Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
+            .navigationBarItems(leading: Button("Restart") {
+                self.restartGame()
+            })
         }
     }
     
@@ -59,6 +65,8 @@ struct ContentView: View {
         
         usedWords.insert(answer, at: 0)
         newWord = ""
+        
+        score += answer.count
     }
     
     private func startGame() {
@@ -93,6 +101,8 @@ struct ContentView: View {
     }
     
     private func isReal(word: String) -> Bool {
+        guard word.count >= 3 && !rootWord.hasPrefix(word) else { return false }
+        
         let checker = UITextChecker()
         let range = NSRange(location: 0, length: word.utf16.count)
         let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
@@ -104,6 +114,15 @@ struct ContentView: View {
         alertTitle = title
         alertMessage = message
         showAlert = true
+    }
+    
+    private func restartGame() {
+        usedWords = []
+        newWord = ""
+        alertTitle = ""
+        alertMessage = ""
+        score = 0
+        startGame()
     }
 }
 
